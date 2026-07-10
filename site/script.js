@@ -69,6 +69,8 @@
     "Speaker & Educator",
   ];
   const rotator = document.getElementById("roleRotator");
+  const roleArticle = document.getElementById("roleArticle");
+  const articleFor = (role) => (/^[aeiou]/i.test(role) ? "an" : "a");
   if (rotator && !reducedMotion) {
     let idx = 0;
     setInterval(() => {
@@ -76,6 +78,7 @@
       setTimeout(() => {
         idx = (idx + 1) % roles.length;
         rotator.textContent = roles[idx];
+        if (roleArticle) roleArticle.textContent = articleFor(roles[idx]);
         rotator.classList.remove("switching");
         rotator.classList.add("entering");
         setTimeout(() => rotator.classList.remove("entering"), 420);

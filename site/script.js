@@ -182,20 +182,57 @@
   });
   applyPubFilters();
 
-  /* ---------- Contact form → mailto ---------- */
+  /* ---------- Contact form → direct send (FormSubmit.co), mailto fallback ---------- */
+  const CONTACT_EMAIL = "dasante-darko@ashesi.edu.gh";
+  const FORM_ENDPOINT = "https://formsubmit.co/ajax/" + CONTACT_EMAIL;
   const form = document.getElementById("contactForm");
   if (form) {
-    form.addEventListener("submit", (e) => {
+    const submitBtn = document.getElementById("cfSubmit");
+    const statusEl = document.getElementById("cfStatus");
+    const showStatus = (text, kind) => {
+      if (!statusEl) return;
+      statusEl.hidden = false;
+      statusEl.textContent = text;
+      statusEl.className = "form-status " + kind;
+    };
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (document.getElementById("cfHoney")?.value) return; // spam bot filled the hidden field
       const name = document.getElementById("cfName").value.trim();
       const org = document.getElementById("cfOrg").value.trim();
       const topic = document.getElementById("cfTopic").value;
       const msg = document.getElementById("cfMsg").value.trim();
-      const subject = encodeURIComponent(`[Website] ${topic} | ${name}`);
-      const body = encodeURIComponent(
-        `Name: ${name}\nOrganisation: ${org || "N/A"}\nTopic: ${topic}\n\n${msg}`
-      );
-      window.location.href = `mailto:dasante-darko@ashesi.edu.gh?subject=${subject}&body=${body}`;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
+      try {
+        const res = await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            name: name,
+            organisation: org || "N/A",
+            topic: topic,
+            message: msg,
+            _subject: `[Website] ${topic} | ${name}`,
+            _template: "table",
+            _captcha: "false",
+          }),
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        showStatus("Message sent. Dr. Asante-Darko will get back to you soon.", "ok");
+        form.reset();
+      } catch {
+        // Direct send unavailable (offline, blocked, or service down): fall back to email client.
+        showStatus("Direct send is unavailable right now. Opening your email app instead…", "err");
+        const subject = encodeURIComponent(`[Website] ${topic} | ${name}`);
+        const body = encodeURIComponent(
+          `Name: ${name}\nOrganisation: ${org || "N/A"}\nTopic: ${topic}\n\n${msg}`
+        );
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send message →";
+      }
     });
   }
 

@@ -420,6 +420,7 @@
           </ul>
         </div>
         <form class="contact-form reveal d2" id="contactForm">
+          <input type="text" id="cfHoney" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
           <label>Name<input type="text" id="cfName" required autocomplete="name" /></label>
           <label>Organisation<input type="text" id="cfOrg" autocomplete="organization" /></label>
           <label>What can I help with?
@@ -432,8 +433,9 @@
             </select>
           </label>
           <label>Message<textarea id="cfMsg" rows="5" required></textarea></label>
-          <button type="submit" class="btn btn-dark btn-lg">Send message →</button>
-          <p class="form-note">Opens your email client with the message pre-filled, sent directly to Dr. Asante-Darko. Please only click the "Send message" button ONCE.</p>
+          <button type="submit" class="btn btn-dark btn-lg" id="cfSubmit">Send message →</button>
+          <p class="form-status" id="cfStatus" role="status" hidden></p>
+          <p class="form-note">Your message goes directly to Dr. Asante-Darko's inbox. Please only click the "Send message" button ONCE.</p>
         </form>
       </div>
     </section>

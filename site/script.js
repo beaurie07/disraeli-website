@@ -124,7 +124,9 @@
     .map((id) => document.getElementById(id))
     .filter(Boolean);
   const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
-  const setActive = () => {
+  const progressBar = document.getElementById("scrollProgress");
+  const toTopBtn = document.getElementById("toTop");
+  const onScrollUpdate = () => {
     let current = "";
     sections.forEach((s) => {
       if (s.getBoundingClientRect().top <= window.innerHeight * 0.35) current = s.id;
@@ -132,9 +134,37 @@
     navAnchors.forEach((a) => {
       a.classList.toggle("active", a.getAttribute("href") === "#" + current);
     });
+    if (progressBar) {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
+    }
+    if (toTopBtn) toTopBtn.classList.toggle("show", window.scrollY > window.innerHeight * 0.9);
   };
-  window.addEventListener("scroll", setActive, { passive: true });
-  setActive();
+  window.addEventListener("scroll", onScrollUpdate, { passive: true });
+  onScrollUpdate();
+  toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
+
+  /* ---------- Hero photo tilt (desktop pointers only) ---------- */
+  const heroPhoto = document.querySelector(".hero-photo");
+  const photoFrame = document.querySelector(".photo-frame");
+  if (heroPhoto && photoFrame && !reducedMotion && window.matchMedia("(pointer: fine)").matches) {
+    let raf = null;
+    heroPhoto.addEventListener("mousemove", (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        const r = photoFrame.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+        photoFrame.classList.add("tilting");
+        photoFrame.style.transform = "rotateY(" + (dx * 5).toFixed(2) + "deg) rotateX(" + (-dy * 5).toFixed(2) + "deg)";
+      });
+    });
+    heroPhoto.addEventListener("mouseleave", () => {
+      photoFrame.classList.remove("tilting");
+      photoFrame.style.transform = "";
+    });
+  }
 
   /* ---------- Publications: filter + search ---------- */
   const pubs = Array.from(document.querySelectorAll(".pub"));
@@ -145,6 +175,7 @@
   const PUB_PREVIEW_COUNT = 5;
   let activeFilter = "all";
   let pubsExpanded = false;
+  let pubsInteracted = false; // no entrance animation on initial page load
 
   const applyPubFilters = () => {
     const q = (searchInput?.value || "").trim().toLowerCase();
@@ -153,10 +184,21 @@
       const matchesText = !q || li.textContent.toLowerCase().includes(q);
       return matchesCat && matchesText;
     });
-    pubs.forEach((li) => li.classList.add("hidden"));
-    matches.forEach((li, i) => {
-      if (pubsExpanded || i < PUB_PREVIEW_COUNT) li.classList.remove("hidden");
+    pubs.forEach((li) => {
+      li.classList.add("hidden");
+      li.classList.remove("pub-in");
+      li.style.animationDelay = "";
     });
+    matches.forEach((li, i) => {
+      if (pubsExpanded || i < PUB_PREVIEW_COUNT) {
+        li.classList.remove("hidden");
+        if (pubsInteracted && !reducedMotion) {
+          li.style.animationDelay = Math.min(i * 35, 350) + "ms";
+          li.classList.add("pub-in");
+        }
+      }
+    });
+    pubsInteracted = true;
     if (emptyMsg) emptyMsg.hidden = matches.length > 0;
     if (moreBtn) {
       moreBtn.hidden = matches.length <= PUB_PREVIEW_COUNT;
@@ -202,6 +244,7 @@
       const org = document.getElementById("cfOrg").value.trim();
       const topic = document.getElementById("cfTopic").value;
       const msg = document.getElementById("cfMsg").value.trim();
+      const submitHtml = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.textContent = "Sending…";
       try {
@@ -231,7 +274,7 @@
         window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Send message →";
+        submitBtn.innerHTML = submitHtml;
       }
     });
   }

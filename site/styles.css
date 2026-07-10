@@ -164,9 +164,7 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .hero-lede { max-width: 540px; color: rgba(247, 244, 236, 0.85); margin-bottom: 32px; font-size: 1.05rem; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 
-.hero-photo { position: relative; justify-self: end; perspective: 900px; }
-.photo-frame.tilting { transition: transform 0.15s ease-out; }
-.photo-frame { transition: transform 0.5s ease; }
+.hero-photo { position: relative; justify-self: end; }
 .photo-frame {
   width: min(420px, 80vw); aspect-ratio: 1 / 1; border-radius: 24px 24px 24px 90px; overflow: hidden;
   border: 1px solid rgba(201, 162, 39, 0.35);

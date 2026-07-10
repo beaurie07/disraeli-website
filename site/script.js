@@ -144,27 +144,6 @@
   onScrollUpdate();
   toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
 
-  /* ---------- Hero photo tilt (desktop pointers only) ---------- */
-  const heroPhoto = document.querySelector(".hero-photo");
-  const photoFrame = document.querySelector(".photo-frame");
-  if (heroPhoto && photoFrame && !reducedMotion && window.matchMedia("(pointer: fine)").matches) {
-    let raf = null;
-    heroPhoto.addEventListener("mousemove", (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        const r = photoFrame.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
-        const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
-        photoFrame.classList.add("tilting");
-        photoFrame.style.transform = "rotateY(" + (dx * 5).toFixed(2) + "deg) rotateX(" + (-dy * 5).toFixed(2) + "deg)";
-      });
-    });
-    heroPhoto.addEventListener("mouseleave", () => {
-      photoFrame.classList.remove("tilting");
-      photoFrame.style.transform = "";
-    });
-  }
 
   /* ---------- Publications: filter + search ---------- */
   const pubs = Array.from(document.querySelectorAll(".pub"));

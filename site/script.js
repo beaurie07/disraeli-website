@@ -5,7 +5,7 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- Scroll reveal (progressive enhancement) ---------- */
-  const revealEls = document.querySelectorAll(".reveal, .reveal-l, .reveal-r");
+  const revealEls = document.querySelectorAll(".reveal, .reveal-l, .reveal-r, .reveal-scale");
   if (!reducedMotion && "IntersectionObserver" in window) {
     document.documentElement.classList.add("js-anim");
     const io = new IntersectionObserver(
@@ -17,7 +17,7 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -12% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
     // Safety net: never leave content hidden if observation stalls.

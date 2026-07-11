@@ -24,6 +24,7 @@
   --shadow: 0 12px 40px rgba(10, 25, 18, 0.16);
   --container: 1160px;
   --nav-h: 72px;
+  --e: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -496,10 +497,22 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 
 /* ---------- Reveal animations (progressive enhancement: content is
    visible by default; hiding only applies once JS adds .js-anim) ---------- */
-.js-anim .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.js-anim .reveal-l { opacity: 0; transform: translateX(-32px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.8, 0.3, 1); }
-.js-anim .reveal-r { opacity: 0; transform: translateX(32px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.8, 0.3, 1); }
-.js-anim .reveal.in, .js-anim .reveal-l.in, .js-anim .reveal-r.in { opacity: 1; transform: none; }
+.js-anim .reveal,
+.js-anim .reveal-l,
+.js-anim .reveal-r,
+.js-anim .reveal-scale {
+  opacity: 0;
+  transition: opacity 0.75s var(--e), transform 0.85s var(--e);
+  will-change: opacity, transform;
+}
+.js-anim .reveal { transform: translateY(22px); }
+.js-anim .reveal-l { transform: translateX(-30px); }
+.js-anim .reveal-r { transform: translateX(30px); }
+.js-anim .reveal-scale { transform: translateY(18px) scale(0.965); }
+.js-anim .reveal.in,
+.js-anim .reveal-l.in,
+.js-anim .reveal-r.in,
+.js-anim .reveal-scale.in { opacity: 1; transform: none; }
 .js-anim .d1 { transition-delay: 0.1s; }
 .js-anim .d2 { transition-delay: 0.2s; }
 .js-anim .d3 { transition-delay: 0.3s; }
@@ -508,7 +521,7 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js-anim .reveal, .js-anim .reveal-l, .js-anim .reveal-r { opacity: 1; transform: none; transition: none; }
+  .js-anim .reveal, .js-anim .reveal-l, .js-anim .reveal-r, .js-anim .reveal-scale { opacity: 1; transform: none; transition: none; }
   .marquee-track { animation: none; }
   .testi-track { animation: none; }
   .testi-marquee { overflow-x: auto; }

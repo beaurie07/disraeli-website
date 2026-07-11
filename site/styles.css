@@ -238,6 +238,17 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .about-copy strong { color: var(--forest); }
 .about-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; align-items: center; }
 
+.about-photo { margin-top: 40px; }
+.about-photo img {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: var(--radius); border: 1px solid var(--line-light);
+  box-shadow: 0 16px 40px rgba(14, 42, 31, 0.14);
+}
+.about-photo figcaption {
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(26, 26, 24, 0.5); margin-top: 12px;
+}
+
 /* Timeline */
 .timeline { position: relative; padding-left: 34px; }
 .timeline-rail {
@@ -386,7 +397,7 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .tick-list strong { color: var(--forest); }
 
 /* ---------- Testimonials (slow marquee, pause + pop on hover) ---------- */
-.testi-marquee { overflow: hidden; margin-top: 16px; padding: 14px 0 28px; }
+.testi-marquee { overflow: hidden; margin-top: 16px; padding: 40px 0 28px; }
 .testi-track {
   display: flex; gap: 22px; width: max-content;
   animation: testiScroll 75s linear infinite;
@@ -406,6 +417,19 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   border-color: rgba(201, 162, 39, 0.55);
   box-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
 }
+.testi-card { position: relative; }
+.testi-card::before {
+  content: ""; position: absolute; top: -18px; left: 50%; margin-left: -1px;
+  width: 2px; height: 18px; background: rgba(201, 162, 39, 0.45);
+}
+.testi-card::after {
+  content: ""; position: absolute; top: -30px; left: 50%; margin-left: -7px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.22);
+  transition: box-shadow 0.35s ease;
+}
+.testi-card:hover::after { box-shadow: 0 0 0 6px rgba(201, 162, 39, 0.35); }
 .testi-card p { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.55; color: rgba(247, 244, 236, 0.92); }
 .testi-card footer { display: flex; flex-direction: column; font-size: 0.85rem; }
 .testi-card footer strong { color: var(--gold); }
@@ -473,7 +497,9 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 /* ---------- Reveal animations (progressive enhancement: content is
    visible by default; hiding only applies once JS adds .js-anim) ---------- */
 .js-anim .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.js-anim .reveal.in { opacity: 1; transform: none; }
+.js-anim .reveal-l { opacity: 0; transform: translateX(-32px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.8, 0.3, 1); }
+.js-anim .reveal-r { opacity: 0; transform: translateX(32px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.8, 0.3, 1); }
+.js-anim .reveal.in, .js-anim .reveal-l.in, .js-anim .reveal-r.in { opacity: 1; transform: none; }
 .js-anim .d1 { transition-delay: 0.1s; }
 .js-anim .d2 { transition-delay: 0.2s; }
 .js-anim .d3 { transition-delay: 0.3s; }
@@ -482,7 +508,7 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js-anim .reveal { opacity: 1; transform: none; transition: none; }
+  .js-anim .reveal, .js-anim .reveal-l, .js-anim .reveal-r { opacity: 1; transform: none; transition: none; }
   .marquee-track { animation: none; }
   .testi-track { animation: none; }
   .testi-marquee { overflow-x: auto; }

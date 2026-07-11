@@ -5,7 +5,7 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- Scroll reveal (progressive enhancement) ---------- */
-  const revealEls = document.querySelectorAll(".reveal");
+  const revealEls = document.querySelectorAll(".reveal, .reveal-l, .reveal-r");
   if (!reducedMotion && "IntersectionObserver" in window) {
     document.documentElement.classList.add("js-anim");
     const io = new IntersectionObserver(

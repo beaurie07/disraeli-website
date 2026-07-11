@@ -25,7 +25,7 @@
   }
 
   /* ---------- Animated counters ---------- */
-  const counters = document.querySelectorAll(".cred-num");
+  const counters = document.querySelectorAll(".cred-num, .cstat-num");
   const animateCounter = (el) => {
     const target = parseFloat(el.dataset.count);
     const decimals = parseInt(el.dataset.decimals || "0", 10);

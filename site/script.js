@@ -147,6 +147,42 @@
   onScrollUpdate();
   toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
 
+  /* ---------- Testimonials: auto-scroll + manual arrows ---------- */
+  const marquee = document.getElementById("testiMarquee");
+  const track = marquee?.querySelector(".testi-track");
+  if (marquee && track) {
+    let paused = false;
+    let resumeTimer = null;
+    const half = () => track.scrollWidth / 2; // one full set (cards are duplicated)
+    const step = () => track.querySelector(".testi-card").offsetWidth + 22; // card + gap
+    const scheduleResume = () => {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => (paused = false), 3000);
+    };
+    // Ambient auto-scroll (skipped for reduced motion; manual arrows still work)
+    if (!reducedMotion) {
+      const tick = () => {
+        if (!paused) {
+          marquee.scrollLeft += 0.5;
+          if (marquee.scrollLeft >= half()) marquee.scrollLeft -= half();
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      marquee.addEventListener("mouseenter", () => (paused = true));
+      marquee.addEventListener("mouseleave", () => (paused = false));
+    }
+    const nudge = (dir) => {
+      paused = true;
+      // Seamless wrap: if stepping back past the start, jump forward into the duplicate set first.
+      if (dir < 0 && marquee.scrollLeft < step()) marquee.scrollLeft += half();
+      if (dir > 0 && marquee.scrollLeft >= half()) marquee.scrollLeft -= half();
+      marquee.scrollBy({ left: dir * step(), behavior: reducedMotion ? "auto" : "smooth" });
+      scheduleResume();
+    };
+    document.getElementById("testiPrev")?.addEventListener("click", () => nudge(-1));
+    document.getElementById("testiNext")?.addEventListener("click", () => nudge(1));
+  }
 
   /* ---------- Publications: filter + search ---------- */
   const pubs = Array.from(document.querySelectorAll(".pub"));

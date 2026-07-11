@@ -429,15 +429,22 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .tick-list li::before { content: "◆"; position: absolute; left: 0; top: 1px; color: var(--gold); font-size: 0.7rem; }
 .tick-list strong { color: var(--forest); }
 
-/* ---------- Testimonials (slow marquee, pause + pop on hover) ---------- */
-.testi-marquee { overflow: hidden; margin-top: 16px; padding: 40px 0 28px; }
-.testi-track {
-  display: flex; gap: 22px; width: max-content;
-  animation: testiScroll 75s linear infinite;
-  will-change: transform;
+/* ---------- Testimonials (auto-scroll + arrows, pause + pop on hover) ---------- */
+.testi-marquee {
+  overflow-x: auto; margin-top: 16px; padding: 40px 0 28px;
+  scrollbar-width: none; -ms-overflow-style: none;
 }
-.testi-marquee:hover .testi-track { animation-play-state: paused; }
-@keyframes testiScroll { to { transform: translateX(calc(-50% - 11px)); } }
+.testi-marquee::-webkit-scrollbar { display: none; }
+.testi-track { display: flex; gap: 22px; width: max-content; }
+.testi-nav { display: flex; justify-content: center; gap: 14px; margin-top: 6px; }
+.testi-arrow {
+  width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  border: 1.5px solid rgba(201, 162, 39, 0.45); background: transparent;
+  color: var(--gold); font-size: 1.15rem; line-height: 1;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.testi-arrow:hover { background: var(--gold); color: var(--forest); border-color: var(--gold); transform: translateY(-2px); }
+.testi-arrow:focus-visible { outline: 2.5px solid var(--gold); outline-offset: 3px; }
 .testi-card {
   width: min(380px, 78vw); flex-shrink: 0;
   background: var(--forest-2); border: 1px solid var(--line-dark);
@@ -555,7 +562,6 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   html { scroll-behavior: auto; }
   .js-anim .reveal, .js-anim .reveal-l, .js-anim .reveal-r, .js-anim .reveal-scale { opacity: 1; transform: none; transition: none; }
   .marquee-track { animation: none; }
-  .testi-track { animation: none; }
   .testi-marquee { overflow-x: auto; }
   .js-anim .section-title::after { transform: none; transition: none; }
   .pub.pub-in { animation: none; }

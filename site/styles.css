@@ -341,7 +341,25 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .service-card {
   background: var(--forest-2); border: 1px solid var(--line-dark);
   border-radius: var(--radius); padding: 32px 28px;
+  overflow: hidden;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Image band: bleeds to the card edges and fades into the card colour */
+.svc-media {
+  position: relative; height: 132px;
+  margin: -32px -28px 24px; overflow: hidden;
+}
+.svc-media img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.4s var(--e);
+}
+.service-card:hover .svc-media img { transform: scale(1.07); }
+.svc-media::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(11, 23, 18, 0.2) 0%,
+    rgba(18, 33, 26, 0.55) 55%,
+    var(--forest-2) 100%);
 }
 .service-card:hover {
   transform: translateY(-6px); border-color: rgba(205, 169, 94, 0.5);

@@ -5,7 +5,7 @@
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- Scroll reveal (progressive enhancement) ---------- */
-  const revealEls = document.querySelectorAll(".reveal, .reveal-l, .reveal-r, .reveal-scale");
+  const revealEls = document.querySelectorAll(".reveal, .reveal-l, .reveal-r, .reveal-scale, .reveal-wipe, .reveal-mask");
   if (!reducedMotion && "IntersectionObserver" in window) {
     document.documentElement.classList.add("js-anim");
     const io = new IntersectionObserver(
@@ -129,6 +129,9 @@
   const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
   const progressBar = document.getElementById("scrollProgress");
   const toTopBtn = document.getElementById("toTop");
+  const navEl = document.querySelector(".nav");
+  const heroFrame = document.querySelector(".photo-frame");
+  let lastScrollY = window.scrollY;
   const onScrollUpdate = () => {
     let current = "";
     sections.forEach((s) => {
@@ -142,10 +145,35 @@
       progressBar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
     }
     if (toTopBtn) toTopBtn.classList.toggle("show", window.scrollY > window.innerHeight * 0.9);
+    const y = window.scrollY;
+    if (navEl && !reducedMotion) {
+      if (y > lastScrollY + 6 && y > 320) navEl.classList.add("nav-hidden");
+      else if (y < lastScrollY - 6 || y <= 320) navEl.classList.remove("nav-hidden");
+    }
+    if (heroFrame && !reducedMotion && y < window.innerHeight * 1.3) {
+      heroFrame.style.translate = "0 " + (y * 0.06).toFixed(1) + "px";
+    }
+    lastScrollY = y;
   };
   window.addEventListener("scroll", onScrollUpdate, { passive: true });
   onScrollUpdate();
   toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
+
+  /* ---------- Hero cursor glow (desktop only) ---------- */
+  const hero = document.querySelector(".hero");
+  const glow = document.getElementById("heroGlow");
+  if (hero && glow && !reducedMotion && window.matchMedia("(pointer: fine)").matches) {
+    let glowRaf = null;
+    hero.addEventListener("mousemove", (e) => {
+      if (glowRaf) return;
+      glowRaf = requestAnimationFrame(() => {
+        glowRaf = null;
+        const r = hero.getBoundingClientRect();
+        glow.style.setProperty("--mx", e.clientX - r.left + "px");
+        glow.style.setProperty("--my", e.clientY - r.top + "px");
+      });
+    });
+  }
 
   /* ---------- Testimonials: auto-scroll + manual arrows ---------- */
   const marquee = document.getElementById("testiMarquee");

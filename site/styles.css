@@ -375,6 +375,38 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 }
 .cta-card .btn { margin-top: 12px; }
 
+/* Bright banner: a luminous break in the dark section */
+.consult-banner {
+  position: relative; margin-top: 64px; height: 320px;
+  border-radius: var(--radius); overflow: hidden;
+  border: 1px solid rgba(205, 169, 94, 0.28);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.consult-banner img { width: 100%; height: 100%; object-fit: cover; }
+/* Scrim only across the left, so the right stays bright */
+.consult-banner::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg,
+    rgba(11, 23, 18, 0.92) 0%,
+    rgba(11, 23, 18, 0.62) 40%,
+    rgba(11, 23, 18, 0.12) 70%,
+    transparent 100%);
+}
+.cb-inner {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 clamp(26px, 5vw, 56px); max-width: 660px;
+}
+.cb-eyebrow {
+  font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.cb-line {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.45rem, 2.9vw, 2.3rem); line-height: 1.22;
+  color: var(--ivory);
+}
+
 .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
 .case-card {
   background: rgba(18, 53, 40, 0.55); border: 1px solid var(--line-dark);
@@ -657,6 +689,8 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   .services-grid, .cases-grid, .teach-grid { grid-template-columns: 1fr; }
   .methods { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .consult-banner { height: 260px; }
+  .consult-banner::after { background: linear-gradient(100deg, rgba(11,23,18,0.94) 0%, rgba(11,23,18,0.75) 55%, rgba(11,23,18,0.35) 100%); }
   .gallery { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; }
   .g-wide { grid-column: span 2; }
   .pub { grid-template-columns: 58px 1fr; }

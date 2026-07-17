@@ -131,6 +131,10 @@
   const toTopBtn = document.getElementById("toTop");
   const navEl = document.querySelector(".nav");
   const heroFrame = document.querySelector(".photo-frame");
+  const cvFloat = document.getElementById("cvFloat");
+  // Speaking gallery: each tile drifts at its own rate for depth
+  const galleryItems = Array.from(document.querySelectorAll(".gallery .g-item"));
+  const driftAmp = [10, -14, 7, -11, 13];
   let lastScrollY = window.scrollY;
   const onScrollUpdate = () => {
     let current = "";
@@ -144,7 +148,9 @@
       const max = document.documentElement.scrollHeight - window.innerHeight;
       progressBar.style.transform = "scaleX(" + (max > 0 ? window.scrollY / max : 0) + ")";
     }
-    if (toTopBtn) toTopBtn.classList.toggle("show", window.scrollY > window.innerHeight * 0.9);
+    const pastHero = window.scrollY > window.innerHeight * 0.9;
+    if (toTopBtn) toTopBtn.classList.toggle("show", pastHero);
+    if (cvFloat) cvFloat.classList.toggle("show", pastHero);
     const y = window.scrollY;
     if (navEl && !reducedMotion) {
       if (y > lastScrollY + 6 && y > 320) navEl.classList.add("nav-hidden");
@@ -152,6 +158,15 @@
     }
     if (heroFrame && !reducedMotion && y < window.innerHeight * 1.3) {
       heroFrame.style.translate = "0 " + (y * 0.06).toFixed(1) + "px";
+    }
+    if (!reducedMotion && galleryItems.length) {
+      const vh = window.innerHeight;
+      galleryItems.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -240 || r.top > vh + 240) return; // offscreen: skip
+        const delta = (r.top + r.height / 2 - vh / 2) / vh; // -1 .. 1
+        el.style.translate = "0 " + (delta * (driftAmp[i % driftAmp.length])).toFixed(1) + "px";
+      });
     }
     lastScrollY = y;
   };

@@ -500,6 +500,19 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   font-size: 0.98rem; color: rgba(247, 244, 236, 0.85);
 }
 .conf-list .mono { font-size: 0.8rem; font-weight: 700; min-width: 46px; }
+.conf-list li { position: relative; transition: padding-left 0.35s var(--e), background 0.35s ease; }
+.conf-list li::before {
+  content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px;
+  background: var(--gold); transform: scaleY(0); transform-origin: center;
+  transition: transform 0.35s var(--e);
+}
+.conf-list li:hover::before { transform: scaleY(1); }
+.conf-list li:hover { padding-left: 16px; background: rgba(205, 169, 94, 0.045); }
+
+/* Gallery tiles drift at different rates as you scroll (translate set from JS).
+   Specific enough to beat .js-anim .reveal-wipe, which also sets will-change. */
+.js-anim .gallery .g-item.reveal-wipe,
+.gallery .g-item { will-change: transform, clip-path; }
 
 /* ---------- Teaching ---------- */
 .teach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 30px; }
@@ -606,7 +619,7 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 
 /* ---------- Back to top ---------- */
 .to-top {
-  position: fixed; right: 26px; bottom: 26px; z-index: 95;
+  position: fixed; right: 26px; bottom: 84px; z-index: 95;
   width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
   background: var(--gold); color: var(--forest);
   font-size: 1.25rem; font-weight: 700; line-height: 1;
@@ -617,6 +630,33 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .to-top.show { opacity: 1; transform: none; pointer-events: auto; }
 .to-top:hover { background: var(--gold-soft); }
 .to-top:focus-visible { outline: 2.5px solid var(--forest); outline-offset: 3px; }
+
+/* Floating Download CV: sits beneath the back-to-top, expands on hover */
+.cv-float {
+  position: fixed; right: 26px; bottom: 26px; z-index: 95;
+  display: flex; align-items: center; justify-content: flex-end;
+  width: 48px; height: 48px; border-radius: 999px; overflow: hidden;
+  background: var(--forest-2); border: 1.5px solid rgba(205, 169, 94, 0.5);
+  color: var(--gold); text-decoration: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+  opacity: 0; transform: translateY(14px); pointer-events: none;
+  transition: width 0.4s var(--e), background 0.25s ease, color 0.25s ease,
+              border-color 0.25s ease, opacity 0.35s ease, transform 0.35s ease;
+}
+.cv-float.show { opacity: 1; transform: none; pointer-events: auto; }
+.cv-float:hover, .cv-float:focus-visible {
+  width: 172px; background: var(--gold); color: var(--forest); border-color: var(--gold);
+}
+.cv-float:focus-visible { outline: 2.5px solid var(--gold); outline-offset: 3px; }
+.cv-label {
+  white-space: nowrap; font-size: 0.85rem; font-weight: 600;
+  padding-left: 20px; opacity: 0; transition: opacity 0.3s ease;
+}
+.cv-float:hover .cv-label, .cv-float:focus-visible .cv-label { opacity: 1; }
+.cv-icon {
+  flex: 0 0 45px; display: grid; place-items: center;
+  font-size: 1.1rem; font-weight: 700;
+}
 
 /* Marcellus ships one weight: keep display headings at 400 (no faux bold) */
 .case-card h4, .timeline-list h4, .teach-col h3, .cta-card h3, .service-card h3,
@@ -656,6 +696,9 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   .js-anim .section-title.reveal { filter: none; }
   .js-anim .hero-photo:not(.in) .photo-frame img { transform: none; }
   .nav.nav-hidden { transform: none; }
+  .gallery .g-item { translate: none !important; }
+  .cv-float { width: 172px; }
+  .cv-label { opacity: 1; }
   body::after { display: none; }
   .marquee-track { animation: none; }
   .testi-marquee { overflow-x: auto; }

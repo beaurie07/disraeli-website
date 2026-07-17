@@ -631,32 +631,28 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
 .to-top:hover { background: var(--gold-soft); }
 .to-top:focus-visible { outline: 2.5px solid var(--forest); outline-offset: 3px; }
 
-/* Floating Download CV: sits beneath the back-to-top, expands on hover */
+/* Floating Download CV: sits beneath the back-to-top, label always visible */
 .cv-float {
   position: fixed; right: 26px; bottom: 26px; z-index: 95;
-  display: flex; align-items: center; justify-content: flex-end;
-  width: 48px; height: 48px; border-radius: 999px; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 9px;
+  height: 48px; padding: 0 20px; border-radius: 999px;
   background: var(--forest-2); border: 1.5px solid rgba(205, 169, 94, 0.5);
-  color: var(--gold); text-decoration: none;
+  color: var(--gold); text-decoration: none; white-space: nowrap;
+  font-size: 0.85rem; font-weight: 600;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
   opacity: 0; transform: translateY(14px); pointer-events: none;
-  transition: width 0.4s var(--e), background 0.25s ease, color 0.25s ease,
-              border-color 0.25s ease, opacity 0.35s ease, transform 0.35s ease;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+              opacity 0.35s ease, transform 0.35s ease;
 }
 .cv-float.show { opacity: 1; transform: none; pointer-events: auto; }
-.cv-float:hover, .cv-float:focus-visible {
-  width: 172px; background: var(--gold); color: var(--forest); border-color: var(--gold);
+.cv-float.show:hover, .cv-float.show:focus-visible {
+  background: var(--gold); color: var(--forest); border-color: var(--gold);
+  transform: translateY(-2px);
 }
 .cv-float:focus-visible { outline: 2.5px solid var(--gold); outline-offset: 3px; }
-.cv-label {
-  white-space: nowrap; font-size: 0.85rem; font-weight: 600;
-  padding-left: 20px; opacity: 0; transition: opacity 0.3s ease;
-}
-.cv-float:hover .cv-label, .cv-float:focus-visible .cv-label { opacity: 1; }
-.cv-icon {
-  flex: 0 0 45px; display: grid; place-items: center;
-  font-size: 1.1rem; font-weight: 700;
-}
+.cv-label { font-size: 0.85rem; font-weight: 600; }
+.cv-icon { font-size: 1rem; font-weight: 700; line-height: 1; transition: transform 0.25s ease; }
+.cv-float:hover .cv-icon { transform: translateY(3px); }
 
 /* Marcellus ships one weight: keep display headings at 400 (no faux bold) */
 .case-card h4, .timeline-list h4, .teach-col h3, .cta-card h3, .service-card h3,
@@ -697,8 +693,6 @@ a:hover > .arr-d, button:hover > .arr-d { transform: translateY(3px); }
   .js-anim .hero-photo:not(.in) .photo-frame img { transform: none; }
   .nav.nav-hidden { transform: none; }
   .gallery .g-item { translate: none !important; }
-  .cv-float { width: 172px; }
-  .cv-label { opacity: 1; }
   body::after { display: none; }
   .marquee-track { animation: none; }
   .testi-marquee { overflow-x: auto; }

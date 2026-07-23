@@ -174,18 +174,26 @@
   onScrollUpdate();
   toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
 
-  /* ---------- Hero cursor glow (desktop only) ---------- */
-  const hero = document.querySelector(".hero");
-  const glow = document.getElementById("heroGlow");
-  if (hero && glow && !reducedMotion && window.matchMedia("(pointer: fine)").matches) {
-    let glowRaf = null;
-    hero.addEventListener("mousemove", (e) => {
-      if (glowRaf) return;
-      glowRaf = requestAnimationFrame(() => {
-        glowRaf = null;
-        const r = hero.getBoundingClientRect();
-        glow.style.setProperty("--mx", e.clientX - r.left + "px");
-        glow.style.setProperty("--my", e.clientY - r.top + "px");
+  /* ---------- Cursor glow (desktop only): hero + every dark section ---------- */
+  if (!reducedMotion && window.matchMedia("(pointer: fine)").matches) {
+    const glowHosts = [
+      [document.querySelector(".hero"), document.getElementById("heroGlow")],
+      ...Array.from(document.querySelectorAll(".section.dark")).map((sec) => [
+        sec,
+        sec.querySelector(".section-glow"),
+      ]),
+    ];
+    glowHosts.forEach(([host, glow]) => {
+      if (!host || !glow) return;
+      let raf = null;
+      host.addEventListener("mousemove", (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = null;
+          const r = host.getBoundingClientRect();
+          glow.style.setProperty("--mx", e.clientX - r.left + "px");
+          glow.style.setProperty("--my", e.clientY - r.top + "px");
+        });
       });
     });
   }

@@ -167,6 +167,14 @@
   onScrollUpdate();
   toTopBtn?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" }));
 
+  /* ---------- Nav logo: scroll to top (its href="#top" targets the fixed
+     header itself, which browsers can't reliably scroll to since a
+     position:fixed element never moves) ---------- */
+  document.querySelector(".nav-logo")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+  });
+
   /* ---------- Cursor glow (desktop only): hero + every dark section ---------- */
   if (!reducedMotion && window.matchMedia("(pointer: fine)").matches) {
     const glowHosts = [
